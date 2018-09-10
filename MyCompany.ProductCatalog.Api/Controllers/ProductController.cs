@@ -11,10 +11,11 @@ namespace MyCompany.ProductCatalog.Api.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly DatabaseContext db;
-        public ProductsController(DatabaseContext db)
+        private readonly DatabaseContext Context;
+
+        public ProductsController(DatabaseContext dbContext)
         {
-            this.db = db;
+            this.Context = dbContext;
         }
 
         // GET api/values
@@ -22,7 +23,7 @@ namespace MyCompany.ProductCatalog.Api.Controllers
         [ProducesResponseType(200, Type = typeof(IEnumerable<Product>))]
         public async Task<ActionResult<IEnumerable<Product>>> Get()
         {
-            var products = await db.Products.ToListAsync();
+            var products = await Context.Products.ToListAsync();
 
             return Ok(products);
         }
@@ -33,33 +34,33 @@ namespace MyCompany.ProductCatalog.Api.Controllers
         [ProducesResponseType(200, Type = typeof(Product))]
         public async Task<ActionResult<Product>> Get(int id)
         {
-            var product = await db.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
-            if (product != null)
-                return Ok(product);
-            else
+            var product = await Context.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
+            if (product == null)
                 return NotFound();
+
+            return Ok(product);
         }
 
         // POST api/values
         [HttpPost]
         public async void Post([FromBody] Product newProduct)
         {
-            await db.Products.AddAsync(newProduct);
-            await db.SaveChangesAsync();
+            await Context.Products.AddAsync(newProduct);
+            await Context.SaveChangesAsync();
         }
 
         // PUT api/values/5
         [HttpPut("{id}")]
         public async void Put(int id, [FromBody] Product updatedProduct)
         {
-            var product = await db.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
+            var product = await Context.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
             if (product != null)
             {
                 product.Code = updatedProduct.Code;
                 product.Name = updatedProduct.Name;
                 product.Photo = updatedProduct.Photo;
                 product.Price = updatedProduct.Price;
-                await db.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
         }
 
@@ -67,9 +68,9 @@ namespace MyCompany.ProductCatalog.Api.Controllers
         [HttpDelete("{id}")]
         public async void Delete(int id)
         {
-            var product = await db.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
-            db.Products.Remove(product);
-            await db.SaveChangesAsync();
+            var product = await Context.Products.FirstOrDefaultAsync(prod => prod.Id.Equals(id));
+            Context.Products.Remove(product);
+            await Context.SaveChangesAsync();
         }
     }
 }

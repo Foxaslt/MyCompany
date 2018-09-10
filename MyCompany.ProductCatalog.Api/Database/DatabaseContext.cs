@@ -40,6 +40,18 @@ namespace MyCompany.ProductCatalog.Api.Database
             return await base.SaveChangesAsync(cancellationToken);
         }
 
+        public override int SaveChanges(bool acceptAllChangesOnSuccess)
+        {
+            AddTimestamps();
+            return base.SaveChanges(acceptAllChangesOnSuccess);
+        }
+
+        public override int SaveChanges()
+        {
+            AddTimestamps();
+            return base.SaveChanges();
+        }
+
         #endregion
 
         #region Private members
