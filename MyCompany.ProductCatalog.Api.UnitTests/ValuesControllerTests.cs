@@ -4,8 +4,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MyCompany.ProductCatalog.Api.Controllers;
 using MyCompany.ProductCatalog.Api.Database;
 using MyCompany.ProductCatalog.Domain;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace MyCompany.ProductCatalog.Api.UnitTests
 {
