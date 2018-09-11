@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace MyCompany.ProductCatalog.Web.Client
@@ -28,6 +29,35 @@ namespace MyCompany.ProductCatalog.Web.Client
                 }
             }
             return default(T);
+        }
+
+        public async Task<T> ServiceRequestAsync<T>(HttpMethod httpMethod, int id)
+        {
+            string newUri = string.Format("{0}/{1}", uri, id);
+            using (var httpMessage = new HttpRequestMessage(httpMethod, newUri))
+            {
+                var response = await client.SendAsync(httpMessage);
+                if (response.IsSuccessStatusCode && httpMethod != HttpMethod.Delete)
+                {
+                    var data = await response.Content.ReadAsStringAsync();
+                    return JsonConvert.DeserializeObject<T>(data);
+                }
+            }
+            return default(T);
+        }
+
+        public async void ServiceRequestAsync<T>(HttpMethod httpMethod, int? id, T t)
+        {
+            string newUri = (id == null ? uri : string.Format("{0}/{1}", uri, id));
+            using (var httpMessage = new HttpRequestMessage(httpMethod, newUri))
+            {
+                httpMessage.Content = 
+                    new StringContent(
+                        JsonConvert.SerializeObject(t),
+                        Encoding.UTF8,
+                        "application/json");
+                var response = await client.SendAsync(httpMessage);
+            }
         }
     }
 }

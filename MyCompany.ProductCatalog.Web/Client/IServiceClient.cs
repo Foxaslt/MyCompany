@@ -6,5 +6,7 @@ namespace MyCompany.ProductCatalog.Web.Client
     public interface IServiceClient
     {
         Task<T> ServiceRequestAsync<T>(HttpMethod httpMethod);
+        Task<T> ServiceRequestAsync<T>(HttpMethod httpMethod, int id);
+        void ServiceRequestAsync<T>(HttpMethod httpMethod, int? id, T t);
     }
 }
