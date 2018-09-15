@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using MyCompany.ProductCatalog.Api.Controllers;
 using MyCompany.ProductCatalog.Api.Database;
 using Swashbuckle.AspNetCore.Swagger;
 
@@ -27,6 +29,16 @@ namespace MyCompany.ProductCatalog.Api
             {
                 c.SwaggerDoc("v1", new Info { Title = "My Company API", Version = "v1" });
             });
+
+            services.AddAntiforgery();
+
+            //services.AddSingleton(new LoggerFactory()
+            //    .AddConsole()
+            //    .AddDebug());
+            services.AddLogging(conf => conf
+                    .AddConsole()
+                    .AddDebug())
+                .AddTransient<ProductsController>();
 
             var connectionString = Configuration.GetValue<string>("ConnectionString");
             //services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(connectionString));

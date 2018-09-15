@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using MyCompany.ProductCatalog.Domain;
 using MyCompany.ProductCatalog.Web.Client;
+using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -33,9 +35,17 @@ namespace MyCompany.ProductCatalog.Web.Controllers
             return View();
         }
 
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Create(Product product)
+        //{
+        //    client.ServiceRequestAsync(HttpMethod.Post, null, product);
+        //    return RedirectToAction(nameof(Index));
+        //}
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Product product)
+        public IActionResult Create(Product product, IList<IFormFile> files)
         {
             client.ServiceRequestAsync(HttpMethod.Post, null, product);
             return RedirectToAction(nameof(Index));
@@ -52,8 +62,16 @@ namespace MyCompany.ProductCatalog.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Product product)
         {
+            if (Exists(id, product.Code))
+                ModelState.AddModelError("Id", "Id already exist");
+
             client.ServiceRequestAsync(HttpMethod.Put, id, product);
             return RedirectToAction(nameof(Index));
+        }
+
+        private bool Exists(int id, string code)
+        {
+            return false;
         }
 
         public async Task<IActionResult> Delete(int id)
