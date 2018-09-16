@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -13,6 +14,9 @@ namespace MyCompany.ProductCatalog.Domain
 
         [StringLength(60, MinimumLength = 3)]
         [DataType(DataType.Text)]
+        [Required]
+        [Display(Name = "Code")]
+        [Remote(action: "VerifyCode", controller: "Products")]
         public string Code { get; set; }
 
         [StringLength(60, MinimumLength = 3)]

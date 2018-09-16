@@ -41,9 +41,8 @@ Solution is Docker ready.
 
 #### TechDebt
 
-* Full Web presentation implementation
-* Full Unit tests coverage
+* Unit tests for Web presentation project
 * Functional tests coverage
-* Logging implementation
+* Logging in Web presentation project
 * Production DB deployment
 * Azure AppInsights telemetry

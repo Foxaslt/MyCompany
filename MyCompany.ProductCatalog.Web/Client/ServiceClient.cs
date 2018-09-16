@@ -59,5 +59,10 @@ namespace MyCompany.ProductCatalog.Web.Client
                 var response = await client.SendAsync(httpMessage);
             }
         }
+
+        public async Task<bool> Exists(string code)
+        {
+            return false;
+        }
     }
 }

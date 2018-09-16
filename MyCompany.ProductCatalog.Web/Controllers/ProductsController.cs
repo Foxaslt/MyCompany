@@ -1,11 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using MyCompany.ProductCatalog.Domain;
 using MyCompany.ProductCatalog.Web.Client;
 using System;
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 
 namespace MyCompany.ProductCatalog.Web.Controllers
 {
@@ -35,18 +36,14 @@ namespace MyCompany.ProductCatalog.Web.Controllers
             return View();
         }
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Create(Product product)
-        //{
-        //    client.ServiceRequestAsync(HttpMethod.Post, null, product);
-        //    return RedirectToAction(nameof(Index));
-        //}
-
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Product product, IList<IFormFile> files)
+        public IActionResult Create(Product product, IFormFile imageData)
         {
+            var img = Common.ImageToBytes(imageData);
+            if (img != null)
+                product.Photo = img;
+
             client.ServiceRequestAsync(HttpMethod.Post, null, product);
             return RedirectToAction(nameof(Index));
         }
@@ -60,18 +57,27 @@ namespace MyCompany.ProductCatalog.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product)
+        public async Task<IActionResult> Edit(int id, Product product, IFormFile imageData)
         {
-            if (Exists(id, product.Code))
-                ModelState.AddModelError("Id", "Id already exist");
+            if (ModelState.IsValid)
+            {
+                var img = Common.ImageToBytes(imageData);
+                if (img != null)
+                    product.Photo = img;
 
-            client.ServiceRequestAsync(HttpMethod.Put, id, product);
+                client.ServiceRequestAsync(HttpMethod.Put, id, product);
+            }
             return RedirectToAction(nameof(Index));
         }
 
-        private bool Exists(int id, string code)
+        [AcceptVerbs("Get", "Post")]
+        public async Task<IActionResult> VerifyCode(string code)
         {
-            return false;
+            bool exists = await client.Exists(code);
+            if (exists)
+                return Json(data: false);
+            else
+                return Json(data: true);
         }
 
         public async Task<IActionResult> Delete(int id)
