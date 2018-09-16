@@ -41,6 +41,7 @@ Solution is Docker ready.
 
 #### TechDebt
 
+* Asynchronous picture loading
 * Unit tests for Web presentation project
 * Functional tests coverage
 * Logging in Web presentation project

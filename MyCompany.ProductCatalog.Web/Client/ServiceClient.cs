@@ -46,7 +46,7 @@ namespace MyCompany.ProductCatalog.Web.Client
             return default(T);
         }
 
-        public async void ServiceRequestAsync<T>(HttpMethod httpMethod, int? id, T t)
+        public void ServiceRequest<T>(HttpMethod httpMethod, int? id, T t)
         {
             string newUri = (id == null ? uri : string.Format("{0}/{1}", uri, id));
             using (var httpMessage = new HttpRequestMessage(httpMethod, newUri))
@@ -56,7 +56,7 @@ namespace MyCompany.ProductCatalog.Web.Client
                         JsonConvert.SerializeObject(t),
                         Encoding.UTF8,
                         "application/json");
-                var response = await client.SendAsync(httpMessage);
+                var response = client.SendAsync(httpMessage).Result;
             }
         }
 

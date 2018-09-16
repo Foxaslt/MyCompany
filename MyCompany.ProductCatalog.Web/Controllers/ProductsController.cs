@@ -44,7 +44,7 @@ namespace MyCompany.ProductCatalog.Web.Controllers
             if (img != null)
                 product.Photo = img;
 
-            client.ServiceRequestAsync(HttpMethod.Post, null, product);
+            client.ServiceRequest(HttpMethod.Post, null, product);
             return RedirectToAction(nameof(Index));
         }
 
@@ -65,7 +65,7 @@ namespace MyCompany.ProductCatalog.Web.Controllers
                 if (img != null)
                     product.Photo = img;
 
-                client.ServiceRequestAsync(HttpMethod.Put, id, product);
+                client.ServiceRequest(HttpMethod.Put, id, product);
             }
             return RedirectToAction(nameof(Index));
         }
