@@ -57,7 +57,7 @@ namespace MyCompany.ProductCatalog.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Product product, IFormFile imageData)
+        public IActionResult Edit(int id, Product product, IFormFile imageData)
         {
             if (ModelState.IsValid)
             {
@@ -75,7 +75,7 @@ namespace MyCompany.ProductCatalog.Web.Controllers
         {
             bool exists = await client.Exists(code);
             if (exists)
-                return Json(data: false);
+                return Json(data: $"{code} have already been provided.");
             else
                 return Json(data: true);
         }
